@@ -1,6 +1,7 @@
 package com.example.scolarite.controllers;
 
 import com.example.scolarite.entities.Utilisateur;
+import com.example.scolarite.repositories.UtilisateurRepository;
 import com.example.scolarite.security.JwtUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Optional;
+@CrossOrigin("http://localhost:4200") 	
 @RestController
 @RequestMapping("/login")
 public class AuthController {
@@ -23,6 +25,8 @@ public class AuthController {
 
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @PostMapping
     public ResponseEntity<?> authenticateUser(@RequestBody Utilisateur utilisateur) {
@@ -37,10 +41,13 @@ public class AuthController {
             
             // Après l'authentification réussie, générer un JWT
             String jwt = jwtUtils.generateJwtToken(authentication);
+            // Récupérer l'utilisateur complet depuis la base de données
+            Optional<Utilisateur> dbUtilisateur = utilisateurRepository.findByUsername(utilisateur.getUsername());
             
             Map<String, Object> response = new HashMap<>();
             response.put("token", jwt);
             response.put("username", utilisateur.getUsername());
+            response.put("role", dbUtilisateur.get().getRole().name());
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {
