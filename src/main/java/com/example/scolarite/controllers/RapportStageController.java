@@ -102,6 +102,25 @@ public class RapportStageController {
         return rapportStageService.getAllRapports();
 
     }
+    
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ETUDIANT')")
+    public ResponseEntity<String> supprimerRapport(@PathVariable Long id, Authentication authentication) {
+        Utilisateur etudiant = getUtilisateurFromAuthentication(authentication);
+
+        Optional<RapportStage> rapportOpt = rapportStageRepository.findById(id);
+        if (rapportOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rapport introuvable.");
+        }
+
+        RapportStage rapport = rapportOpt.get();
+        if (!rapport.getEtudiant().getId().equals(etudiant.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Vous ne pouvez supprimer que vos propres rapports.");
+        }
+
+        rapportStageRepository.delete(rapport);
+        return ResponseEntity.ok("Rapport supprimé avec succès.");
+    }
 
     @GetMapping("/telecharger/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ETUDIANT')")
