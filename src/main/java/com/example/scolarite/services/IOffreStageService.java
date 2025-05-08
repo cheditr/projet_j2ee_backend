@@ -9,5 +9,6 @@ public interface IOffreStageService {
 	public OffreStage createOffre(OffreStage offreStage);
 	public OffreStage updateOffre(OffreStage offre);
 	public void deleteOffre(Long id);
+	public OffreStage getOffreById(Long id);
 
 }

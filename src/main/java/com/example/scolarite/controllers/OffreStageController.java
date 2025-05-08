@@ -31,6 +31,12 @@ public class OffreStageController {
         return offreStageService.getAllOffres();
     }
     
+    @GetMapping("/{id}")
+    public ResponseEntity<OffreStage> getOffreById(@PathVariable Long id) {
+        OffreStage offre = offreStageService.getOffreById(id);
+        return ResponseEntity.ok(offre);
+    }
+    
     //2.créer une offre(seul pour les admins)
     @PostMapping("/publier-offre")
     @PreAuthorize("hasRole('ADMIN')")

@@ -36,4 +36,9 @@ public class OffreStageServiceImpl implements IOffreStageService {
 		offreStageRepository.deleteById(id);
 	}
 
+	@Override
+	public OffreStage getOffreById(Long id) {
+        return offreStageRepository.findById(id).orElseThrow();
+	}
+
 }
