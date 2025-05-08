@@ -26,7 +26,7 @@ public class UtilisateurController {
 	IUtilisateurService utilisateurService;
 	
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String creerUtilisateur(@RequestBody Utilisateur utilisateur) {
     	utilisateurService.creerUtilisateur(utilisateur);
     	return "Succes Enregistrement";
